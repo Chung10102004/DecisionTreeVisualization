@@ -1,0 +1,15 @@
+# The whole app is designed against the light chart surface the palette was
+# validated on, so the theme is pinned rather than following the OS.
+[theme]
+base = "light"
+primaryColor = "#2a78d6"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f0efec"
+textColor = "#0b0b0b"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
