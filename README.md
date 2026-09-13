@@ -40,9 +40,11 @@ streamlit run app.py
 - The packages in `requirements.txt`: streamlit, numpy, pandas, matplotlib,
   plotly, pytest
 
-Graphviz is **optional**. Trees are drawn in the browser without it; installing
-the system package (`sudo apt install graphviz`) only adds SVG and PNG export on
-the Tree page.
+Graphviz is **optional but recommended**. Without it, trees are drawn in the
+browser (the Build page's player then loads viz.js from cdn.jsdelivr.net);
+with the system package (`sudo apt install graphviz`) they render locally, and
+the Tree page gains SVG/PNG export. The player typesets its formulas with KaTeX
+from the same CDN, so the Build page needs internet access either way.
 
 ## Using the app
 
@@ -51,7 +53,7 @@ The sidebar walks through seven pages in order:
 | Page | What it does |
 | --- | --- |
 | 1 · Data | Pick a bundled dataset or upload your own CSV, and set column types |
-| 2 · Build | Plays the construction back one formula at a time — pause, step, scrub, replay — with a note on why each formula is needed; the finished tree appears at the end |
+| 2 · Build | Plays the construction like a video: the tree grows on a full-screen stage while one strip below shows the formula each moment computes — play, pause, step, scrub, replay, full screen |
 | 3 · Tree | The finished tree, plus DOT/SVG/PNG export |
 | 4 · Predict | Send a row down the tree and see the path it takes |
 | 5 · Evaluate | Accuracy, confusion matrix, and the effect of pruning |

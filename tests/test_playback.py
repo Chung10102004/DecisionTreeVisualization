@@ -7,8 +7,9 @@ from src.core.c45 import C45Tree
 from src.core.cart import CARTRegressor
 from src.core.id3 import ID3Tree
 from src.core.trace import ACTION_LEAF, ACTION_SPLIT
-from src.ui import narration, playback
-from src.ui.playback import Cursor
+from src.core import playback
+from src.core.playback import Cursor
+from src.ui import narration
 
 
 @pytest.fixture
@@ -110,10 +111,3 @@ def test_scoring_explanations_name_the_right_criterion(play_tennis, weather_nume
     assert "variance" in narration.why_impurity(cart).lower()
     assert "mean target" in narration.why_stop(cart.steps[-1], cart)
 
-
-def test_next_up_previews_the_following_tick(trace):
-    root = trace.steps[0]
-    assert "scoring" in narration.next_up(root, 0, trace).lower()
-    assert "node #" in narration.next_up(root, playback.max_phase(root), trace)
-    end = playback.last(trace)
-    assert "complete" in narration.next_up(trace.steps[end.step], end.phase, trace)

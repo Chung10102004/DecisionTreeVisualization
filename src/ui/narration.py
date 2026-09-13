@@ -13,7 +13,6 @@ from typing import Optional
 from ..core.node import SPLIT_NUMERIC_BINARY
 from ..core.splitter import SplitCandidate
 from ..core.trace import BuildStep, TrainingTrace
-from .playback import Cursor, advance, phase_label
 
 _IMPURITY_WHY = {
     "entropy": (
@@ -175,14 +174,3 @@ def why_stop(step: BuildStep, trace: TrainingTrace) -> str:
                  f"{step.n_samples:g} samples that reached it.")
     return text
 
-
-def next_up(step: BuildStep, phase: int, trace: TrainingTrace) -> str:
-    """One line teasing what the next tick will reveal, shown while playing."""
-    cursor, finished = advance(Cursor(step.step_id, phase), trace)
-    if finished:
-        return "That was the last node — the queue is empty and the tree is complete."
-    target = trace.steps[cursor.step]
-    if cursor.step != step.step_id:
-        return (f"Next: node #{target.node_id} at depth {target.depth} comes off the queue "
-                f"({target.n_samples:g} samples).")
-    return "Next: " + phase_label(target, cursor.phase).lower() + "."

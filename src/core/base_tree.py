@@ -237,7 +237,7 @@ class BaseDecisionTree(ABC):
         if chosen.gain < self.min_impurity_decrease:
             comp = crit.rule_check_c(
                 "min_impurity_decrease", "best gain", chosen.gain, "<",
-                "min\\_impurity\\_decrease", self.min_impurity_decrease,
+                "min_impurity_decrease", self.min_impurity_decrease,
             )
             return self._finish_leaf(node, step, "no_gain", comp)
 
@@ -255,11 +255,11 @@ class BaseDecisionTree(ABC):
             return "pure", None
         if self.max_depth is not None and node.depth >= self.max_depth:
             return "max_depth", crit.rule_check_c(
-                "max_depth", "depth", node.depth, ">=", "max\\_depth", self.max_depth
+                "max_depth", "depth", node.depth, ">=", "max_depth", self.max_depth
             )
         if node.n_samples < self.min_samples_split:
             return "min_samples_split", crit.rule_check_c(
-                "min_samples_split", "n", node.n_samples, "<", "min\\_samples\\_split", self.min_samples_split
+                "min_samples_split", "n", node.n_samples, "<", "min_samples_split", self.min_samples_split
             )
         if not list(available):
             return "no_features", None

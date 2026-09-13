@@ -1,16 +1,16 @@
-"""The playback cursor for the Build page's animation.
+"""The playback cursor for the build animation.
 
 A build step (one node) is shown in *phases* — impurity, candidate scores, the
 working for the best candidate, the choice — so the formulas appear one at a time
 rather than all at once.  This module is the pure arithmetic of moving that cursor
-around; it knows nothing about Streamlit so it can be tested directly.
+around: which phases a step has, and what comes next or before.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from ..core.trace import ACTION_SPLIT, BuildStep, TrainingTrace
+from .trace import ACTION_SPLIT, BuildStep, TrainingTrace
 
 # Phase indices, shared with the page so the reveal logic reads as names.
 PHASE_IMPURITY = 0
