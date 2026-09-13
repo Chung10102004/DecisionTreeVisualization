@@ -8,6 +8,7 @@ prediction.
 """
 from __future__ import annotations
 
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -26,6 +27,14 @@ DEFAULTS: Dict[str, Any] = {
     "model": None,
     "trace": None,
     "current_step": 0,
+    # Build-page animation: which phase of the current step is revealed, whether
+    # the timer is running, seconds per phase, and whether the finished tree may
+    # be shown yet.
+    "build_phase": 0,
+    "build_playing": False,
+    "build_speed": 2.0,
+    "build_revealed": False,
+    "build_last_tick": 0.0,
     "pruned_tree": None,
     "prune_steps": None,
     "prune_method": None,
@@ -85,6 +94,7 @@ class AppState:
         self.model = None
         self.trace = None
         self.current_step = 0
+        self.stop_playback()
         self.comparison = None
         self.selected_node = None
         self.selected_candidate = None
@@ -102,11 +112,26 @@ class AppState:
         self.prediction_sample = None
 
     def set_model(self, model, trace) -> None:
+        """A freshly trained model starts its build animation from the first step."""
         self.model = model
         self.trace = trace
-        self.current_step = max(len(trace) - 1, 0)
         self.reset_pruning()
         self.reset_prediction()
+        self.start_playback()
+
+    # ----------------------------------------------------------------- playback
+    def start_playback(self) -> None:
+        """Rewind to the first step and let the timer run; hide the finished tree."""
+        self.current_step = 0
+        self.build_phase = 0
+        self.build_playing = True
+        self.build_revealed = False
+        self.build_last_tick = time.monotonic()
+
+    def stop_playback(self) -> None:
+        self.build_phase = 0
+        self.build_playing = False
+        self.build_revealed = False
 
     # --------------------------------------------------------------- accessors
     @property

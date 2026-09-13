@@ -9,7 +9,7 @@
 """
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 import numpy as np
 
@@ -49,6 +49,11 @@ class C45Tree(BaseDecisionTree):
             max_thresholds=self.max_thresholds,
             score_key="gain_ratio",
         )
+
+    def get_params(self) -> Dict[str, Any]:
+        params = super().get_params()
+        params["use_gain_filter"] = self.use_gain_filter
+        return params
 
     # --------------------------------------------------------------- selection
     def _select(self, candidates: Sequence[SplitCandidate]) -> Optional[SplitCandidate]:

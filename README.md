@@ -51,7 +51,7 @@ The sidebar walks through seven pages in order:
 | Page | What it does |
 | --- | --- |
 | 1 · Data | Pick a bundled dataset or upload your own CSV, and set column types |
-| 2 · Build | Step through the split search one node at a time, with the arithmetic |
+| 2 · Build | Plays the construction back one formula at a time — pause, step, scrub, replay — with a note on why each formula is needed; the finished tree appears at the end |
 | 3 · Tree | The finished tree, plus DOT/SVG/PNG export |
 | 4 · Predict | Send a row down the tree and see the path it takes |
 | 5 · Evaluate | Accuracy, confusion matrix, and the effect of pruning |
