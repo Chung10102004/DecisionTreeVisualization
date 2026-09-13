@@ -53,7 +53,7 @@ The sidebar walks through seven pages in order:
 | Page | What it does |
 | --- | --- |
 | 1 · Data | Pick a bundled dataset or upload your own CSV, and set column types |
-| 2 · Build | Plays the construction like a video: the tree grows on a full-screen stage while one strip below shows the formula each moment computes — play, pause, step, scrub, replay, full screen |
+| 2 · Build | Plays the construction like an explainer video, one screen per step: the tree grows on the left while the board on the right fills in beat by beat — the node's impurity, the winning column's gain worked out with the real numbers, the other columns' results ("same formula"), then the decision — play, pause, step, scrub, replay, full screen |
 | 3 · Tree | The finished tree, plus DOT/SVG/PNG export |
 | 4 · Predict | Send a row down the tree and see the path it takes |
 | 5 · Evaluate | Accuracy, confusion matrix, and the effect of pruning |

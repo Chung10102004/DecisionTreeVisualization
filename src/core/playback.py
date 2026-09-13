@@ -1,9 +1,10 @@
 """The playback cursor for the build animation.
 
-A build step (one node) is shown in *phases* — impurity, candidate scores, the
-working for the best candidate, the choice — so the formulas appear one at a time
-rather than all at once.  This module is the pure arithmetic of moving that cursor
-around: which phases a step has, and what comes next or before.
+A build step (one node) is shown in *phases* — the node's impurity, the working
+for the best candidate (with the other columns' results listed beside it), and
+the choice — so the formulas appear one block at a time rather than all at once.
+This module is the pure arithmetic of moving that cursor around: which phases a
+step has, and what comes next or before.
 """
 from __future__ import annotations
 
@@ -14,9 +15,8 @@ from .trace import ACTION_SPLIT, BuildStep, TrainingTrace
 
 # Phase indices, shared with the page so the reveal logic reads as names.
 PHASE_IMPURITY = 0
-PHASE_SCORE = 1
-PHASE_WORKING = 2
-PHASE_CHOICE = 3
+PHASE_WORKING = 1
+PHASE_CHOICE = 2
 PHASE_STOP = 1  # leaves skip straight from impurity to the stop rule
 
 SPEED_OPTIONS: List[float] = [1.0, 1.5, 2.0, 3.0, 4.0, 6.0]
@@ -24,7 +24,7 @@ DEFAULT_SPEED = 2.0
 
 
 def max_phase(step: BuildStep) -> int:
-    """The last phase of a step: 3 for a split, 1 for a leaf."""
+    """The last phase of a step: 2 for a split, 1 for a leaf."""
     return PHASE_CHOICE if step.action == ACTION_SPLIT else PHASE_STOP
 
 
@@ -34,10 +34,8 @@ def phase_label(step: BuildStep, phase: int) -> str:
         return "Measuring how impure the node is"
     if step.action != ACTION_SPLIT:
         return "Deciding to stop — the node becomes a leaf"
-    if phase == PHASE_SCORE:
-        return "Scoring every candidate split"
     if phase == PHASE_WORKING:
-        return "Working through the best candidate, term by term"
+        return "Computing the gain of the best column — the others follow the same formula"
     return "Choosing the split — the tree grows"
 
 

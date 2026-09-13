@@ -179,6 +179,14 @@ def render_algorithm_config(state: AppState, key_prefix: str = "cfg") -> Dict[st
             impurity_options = ["mse", "mae"] if is_regression else ["gini", "entropy", "error"]
         else:
             impurity_options = ["entropy"]
+        # Keyed widgets keep their old value across reruns, so switching algorithm
+        # would leave CART on entropy or C4.5 on min_samples_leaf=1. Reset the
+        # algorithm-specific defaults whenever the algorithm actually changes.
+        default_leaf = 2 if algorithm == "C4.5" else 1
+        if st.session_state.get(f"{key_prefix}_algo_seen") != algorithm:
+            st.session_state[f"{key_prefix}_algo_seen"] = algorithm
+            st.session_state[f"{key_prefix}_impurity"] = impurity_options[0]
+            st.session_state[f"{key_prefix}_msl"] = default_leaf
         impurity = st.selectbox(
             "Impurity measure", impurity_options, index=0, key=f"{key_prefix}_impurity",
             help="The quantity the split is trying to reduce.",
@@ -194,7 +202,6 @@ def render_algorithm_config(state: AppState, key_prefix: str = "cfg") -> Dict[st
             "min_samples_split", 2, 40, 2, key=f"{key_prefix}_mss",
             help="A node with fewer samples than this becomes a leaf without being tested.",
         )
-        default_leaf = 2 if algorithm == "C4.5" else 1
         min_samples_leaf = st.slider(
             "min_samples_leaf", 1, 30, default_leaf, key=f"{key_prefix}_msl",
             help="A split is rejected if it would leave any branch smaller than this. "

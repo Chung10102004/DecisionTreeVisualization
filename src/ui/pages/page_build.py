@@ -1,8 +1,9 @@
 """2 · Build — watch the tree being constructed, like a video.
 
-After **Train** the construction plays in a full-width player (``src/viz/theater``):
-the tree fills the stage and grows as nodes are decided, and a subtitle strip
-under it shows the one formula the current phase computes.  Play, pause, step,
+After **Train** the construction plays in a single-screen player (``src/viz/theater``):
+the tree grows on the left while the board on the right fills in, block by block,
+with the one formula each beat computes — worked out with the node's own numbers
+for the winning column, and listed as results for the others.  Play, pause, step,
 scrub, replay and full-screen all happen in the browser — every frame is prepared
 up front, so nothing here re-runs while the video plays.
 
@@ -45,7 +46,14 @@ FORMATTER = MathFormatter()
 # it to the viewport instead so the tree gets the room a video would.
 _PLAYER_CSS = """
 <style>
-iframe[data-testid="stIFrame"] { height: calc(100vh - 210px) !important; min-height: 560px; }
+/* Streamlit reserves the iframe's fixed pixel height in the layout; stretch the
+   element container too, or whatever follows overlaps the player's controls. */
+div[data-testid="stElementContainer"]:has(> iframe[data-testid="stIFrame"]),
+div[data-testid="stElementContainer"]:has(iframe[data-testid="stIFrame"]) { height: calc(100vh - 150px); min-height: 560px; }
+iframe[data-testid="stIFrame"] { height: 100% !important; min-height: 560px; }
+/* Give the player the whole viewport: tighten the page chrome around it. */
+.block-container { padding-top: 1.2rem !important; padding-bottom: 0.5rem !important; }
+h1 { font-size: 1.45rem !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
 </style>
 """
 _PLAYER_FALLBACK_HEIGHT = 720
@@ -216,9 +224,12 @@ def render() -> None:
     render_sidebar_status(state)
     require_data(state)
 
+    if state.is_model_ready():
+        st.markdown(_PLAYER_CSS, unsafe_allow_html=True)
     st.title("2 · Build the tree, step by step")
-    st.caption("The construction plays like a video: the tree grows on the stage while the "
-               "strip below shows the one formula each moment computes.")
+    if not state.is_model_ready():
+        st.caption("The construction plays like a video: the tree grows on the left while the "
+                   "board on the right works each formula out with the node's own numbers.")
 
     with st.expander("Algorithm and hyper-parameters", expanded=not state.is_model_ready()):
         config = render_algorithm_config(state, key_prefix="build")
@@ -233,9 +244,9 @@ def render() -> None:
 
     trace = state.trace
     theater = _theater(state)
-    st.markdown(_PLAYER_CSS, unsafe_allow_html=True)
     _embed(theater["html"])
-    hints = ["**Space** play/pause · **←/→** step · **F** full screen · **R** replay"]
+    hints = ["**Space** play/pause · **←/→** one beat · **F** full screen · **R** replay · "
+             "everything for a step stays on one screen"]
     if not has_graphviz_binary():
         hints.append("Trees are drawn in the browser (needs access to cdn.jsdelivr.net); "
                      "`sudo apt install graphviz` renders them locally instead.")

@@ -18,9 +18,9 @@ def trace(play_tennis):
     return ID3Tree().fit(df[features], df[target], feature_types=types).get_trace()
 
 
-def test_split_steps_have_four_phases_and_leaves_two(trace):
+def test_split_steps_have_three_phases_and_leaves_two(trace):
     for step in trace.steps:
-        expected = 3 if step.action == ACTION_SPLIT else 1
+        expected = 2 if step.action == ACTION_SPLIT else 1
         assert playback.max_phase(step) == expected
 
 
